@@ -1,0 +1,14 @@
+{
+  "name": "redact-smoke",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The on-chain smoke of Redact and its reading room against GenLayer Studio (chain 61999). The contracts need none of this.",
+  "type": "module",
+  "scripts": {
+    "smoke": "node tests/on_chain/smoke.mjs"
+  },
+  "dependencies": {
+    "genlayer-js": "1.1.8",
+    "viem": "2.56.8"
+  }
+}

@@ -1,0 +1,101 @@
+[13:33:57] P  0x46FAe702b14D2aF2C400887cE97cFC4300078af1  the publisher
+           F  0x48502701c9402beCe89504867763CfD2A85aB584  the finder, who points at the leaking sentence
+           G  0x366a8A6244967EC6dF694fca126DE34ca7197776  the second finder, who points at a public official
+           S  0x367BDbb332F322c0926f05665e41524ED9FcE73b  a stranger, who reports in the wrong category, reports late, certifies and buys
+
+[13:33:57] ---- 1: deploy both contracts, a window too short to report in, and the finders' credit
+      [13:34:37] P deploy redact.py  0xa47238390002ecba902a733cc55228b308456835c63a0e0a65ef8c97040389f1  3 agree, 0 disagree, 2 idle  SUCCESS  0x38792FcC2Db139Ea4a7895e3F60a5Defc6CE5bEa
+      [13:35:14] P deploy reading_room.py  0xb1bd9ef2b2fa01b079f5ac261c4a2dc419a468f804becf99416efbc4d9ccbf15  5 agree, 0 disagree, 0 idle  SUCCESS  0x0924343c854B9FCbca0aF3DB064667722b30BeB3
+      Redact at 0x38792FcC2Db139Ea4a7895e3F60a5Defc6CE5bEa
+      ReadingRoom at 0x0924343c854B9FCbca0aF3DB064667722b30BeB3
+PASS  ReadingRoom is bound to the Redact address it was deployed with, with a floor of 1200 s and 1 GEN  - {"redact":"0x38792fcc2db139ea4a7895e3f60a5defc6ce5bea","offers":0,"sales":0,"refused":0,"paid_total":"0","sells_only":"clean","min_window_seconds":1200,"min_bounty_atto":"1000000000000000000","price_atto":["10000000000000000","1000000000000000000000"]}
+      [13:35:57] P publish(Minutes of the Riversi, ["Councillor Ellis ope, 1000000000000000000, 600) +2 GEN  0x14eb10986f8bffa64d2a50957631d418c61d040444ad316e8e2e67bb6c94787a  5 agree, 0 disagree, 0 idle  SUCCESS
+PASS  a release with a ten-minute window is refused and its 2 GEN come back  - 5 agree, 0 disagree, 0 idle  the report window is 1200 to 2592000 seconds, written as a whole number
+      [13:36:35] F deposit() +0.1 GEN  0xeb485db1c07317b56705dc3f0a91d104939c1d066e10021363e7aaf867d819db  5 agree, 0 disagree, 0 idle  SUCCESS
+      [13:37:13] G deposit() +0.2 GEN  0x5c1f0008a1bef18bdfac2e4a364432023fd94a13418c38b3def79ce697d7b09d  5 agree, 0 disagree, 0 idle  SUCCESS
+PASS  F deposits 0.1 GEN and G 0.2 GEN as credit for report bonds; no model runs in a deposit  - 5 agree, 0 disagree, 0 idle / 5 agree, 0 disagree, 0 idle
+
+[13:37:14] ---- 2: the March minutes, with one sentence that still gives a resident away, and the April minutes twice
+      [13:37:54] P publish(Minutes of the Riversi, ["Councillor Ellis ope, 1000000000000000000, 2400) +2 GEN  0xa8cf95ec869f5e6a3e3e1e778fa280832dce3c3d7d8c555458c2564a323b3f58  5 agree, 0 disagree, 0 idle  SUCCESS
+PASS  R1 is published: six sentences, bounty 1 GEN, a 2 GEN bond held, window 2400 s  - 5 agree, 0 disagree, 0 idle  {"ok": true, "release": "R1", "sentences": 6, "bond": "2000000000000000000", "bounty": "1000000000000000000", "report_bond": "10000000000000
+      [13:38:34] P publish(Minutes of the Riversi, ["Councillor Ellis ope, 1000000000000000000, 1200) +1 GEN  0x24caf40deeadfaea1b650683b80c85857afd436c00c5ee524af66726db870705  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  R2, the April minutes, is published fully redacted: bond 1 GEN, window 1200 s  - 3 agree, 0 disagree, 2 idle  {"ok": true, "release": "R2", "sentences": 5, "bond": "1000000000000000000", "bounty": "1000000000000000000", "report_bond": "10000000000000
+      [13:39:15] S certify(R2)  0x58e81ad66a3288c601ab9189720f1cb82ed1633c01a7fe6687f55b8e045c463c  3 agree, 0 disagree, 2 idle  ERROR
+PASS  certifying R2 before its window ends is refused  - 3 agree, 0 disagree, 2 idle  [EXPECTED] the report window of R2 is open for another 1160 seconds
+      [13:39:55] P publish(Minutes of the Riversi, ["Councillor Ellis ope, 500000000000000000, 1200) +0.5 GEN  0x1fcce26e86bff53fa7cf388b03567490339b98be33adf8b24326ed15a09f9341  5 agree, 0 disagree, 0 idle  SUCCESS
+PASS  R3, the same April minutes with a bounty of 0.5 GEN, is published  - 5 agree, 0 disagree, 0 idle  {"ok": true, "release": "R3", "sentences": 5, "bond": "500000000000000000", "bounty": "500000000000000000", "report_bond": "5000000000000000
+PASS  all three ids are read from the receipts  - R1 R2 R3
+
+[13:39:55] ---- 3: the reading room before anything is certified
+      [13:40:35] P offer(R1, 2000000000000000000)  0xf812fcb9b45c3aee91131c79fb240598e0b778c8c8e5aa4d9f1756754b1e712f  3 agree, 0 disagree, 2 idle  SUCCESS
+      [13:41:14] P offer(R2, 2000000000000000000)  0x339669ac476ed0ecdc600edf7fb175fc4ca8b3654e34a31a0701f13728a642bd  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  P offers R1 and R2 at 2 GEN each; the room read Redact and found both open and at its floor  - 3 agree, 0 disagree, 2 idle / 3 agree, 0 disagree, 2 idle
+      [13:41:54] P offer(R3, 2000000000000000000)  0x6d98927dafbf5006c9daa23825137d01f18cc14e95d117cd3c575de74d465e86  3 agree, 0 disagree, 2 idle  ERROR
+PASS  P offering R3 is refused: a 0.5 GEN bounty is under the room's floor of 1 GEN  - 3 agree, 0 disagree, 2 idle  [EXPECTED] R3 was published with a report window of 1200 s and a bounty of 500000000000000000 atto; this room sells only releases with at le
+      [13:42:34] F offer(R2, 2000000000000000000)  0x3f444a0a04295fde05ca40fa998fbcd6def5709a7d8eb12bd4ee5879ad892b16  3 agree, 0 disagree, 2 idle  ERROR
+PASS  F offering R2 is refused: only the publisher on Redact offers a release  - 3 agree, 0 disagree, 2 idle  [EXPECTED] only the publisher of R2 on Redact may offer it
+      [13:43:14] S buy(R2) +2 GEN  0x3a52b6896af39ed84234eebf233224c222e6811ad8029223feef7ce430eea5ff  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  S buying R2 before it is certified is refused, and the 2 GEN come back  - 3 agree, 0 disagree, 2 idle  R2 is open on Redact, not clean: its report window has not been certified yet; it can be bought once anybody has called certify on Redact after the window and no leak was proven
+      [13:43:54] P withdraw(R3)  0x1a411ef2de8964286517d920081a0757c1589cec482b5ef1d6601eee144de005  5 agree, 0 disagree, 0 idle  SUCCESS
+PASS  P withdraws R3, which nobody reported, and its 0.5 GEN come back  - 5 agree, 0 disagree, 0 idle  {"ok": true, "release": "R3", "status": "withdrawn", "returned": "500000000000000000"}
+
+[13:43:55] ---- 4: the reports on R1, each staking its bond from credit
+      [13:44:34] S report(R1, 3, home)  0xe42cd62f94b8cdb22e5407093e2a3ac1e43d7fa936d3c32129ac4e86df1d03a3  3 agree, 0 disagree, 2 idle  ERROR
+PASS  S reports with no credit: refused before any model is asked, and nothing is taken  - 3 agree, 0 disagree, 2 idle  [EXPECTED] a report on R1 stakes a report bond of 100000000000000000 atto (a tenth of the bounty) from your credit, whic
+      [13:45:12] S deposit() +0.1 GEN  0x15d25f969742052dc74e65ab6fd39ecfa8b17c93a69efd282ea2858d7de272b6  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  S deposits 0.1 GEN of credit  - 3 agree, 0 disagree, 2 idle
+      [13:46:52] S report(R1, 4, money)  0x05641489492b1cb2e5044abef50fb51c4f7669be93a7a634ede6f38677c9646b  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  S reports sentence 4 as money, which it does not reveal: read clean  - 3 agree, 0 disagree, 2 idle  clean
+PASS  and S's 0.1 GEN report bond goes from S's credit to the publisher  - {"s":"0","p":"100000000000000000"}
+      [13:48:10] F report(R1, 4, home)  0x2759d477858cbc091753f46dc64c9f2e4587a5dba25f2b708672316e4574261b  3 agree, 0 disagree, 2 idle  SUCCESS
+      [13:48:40] G report(R1, 1, identity)  0x4d7de44fd8a2c360f1f583567cd9f1f336e085ba77e72e8e425c3cd57764a067  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  F's report of sentence 4 as a home address is read as a leak by both questions in both orders  - 3 agree, 0 disagree, 2 idle  leak
+PASS  and the 1 GEN bounty goes from P's bond to F in the same transaction, F's report bond still in credit  - {"f":"1000000000000000000"}
+PASS  G's report of Councillor Ellis as identity is read clean: an official in office is not a private person  - 3 agree, 0 disagree, 2 idle  clean
+PASS  and G's 0.1 GEN report bond goes from G's credit to the publisher  - {"g":"0","p":"100000000000000000"}
+      [13:49:20] G report(R1, 4, health)  0xa2249f49d8bf640751d7f7568dd7972bcf2387e5a1adf49e879bddcf39f399ac  5 agree, 0 disagree, 0 idle  ERROR
+PASS  G reports sentence 4 again, as health: refused with no model asked, nothing taken  - 5 agree, 0 disagree, 0 idle  [EXPECTED] sentence 4 of R1 is already proven leaked (F2); it takes no further report
+      [13:49:56] G reclaim()  0x54e07e26f14aeafac73afb998a0083d2d6cd3c20359b7a4e0442e564c46c3c88  5 agree, 0 disagree, 0 idle  SUCCESS
+      [13:50:42] F reclaim()  0x64753eb9de97a189f16588089c33d546c02079edfa8790cfb2e0bab403e9a07f  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  G and F each take back what is left of their credit, 0.1 GEN each  - 5 agree, 0 disagree, 0 idle / 3 agree, 0 disagree, 2 idle
+PASS  release(R1): one leak, three reports judged, 1 GEN of bond left, sentence 4 leaked and closed, still open  - {"leaks":1,"judged":3,"bond_left":"1000000000000000000","s4":"leaked","cats":["money","home"]}
+
+[13:50:44] ---- 5: the windows pass, a late report, and the certificates
+      [13:50:47] waiting 1610 s, by the chain clock, for the window of R1 to pass
+      [14:18:15] S report(R1, 2, identity)  0xed34f92957d99e7d0336e0059c01f4346558a315444ed713428bea34f116eddc  5 agree, 0 disagree, 0 idle  ERROR
+PASS  S reports R1 after its window: refused, nothing taken  - 5 agree, 0 disagree, 0 idle  [EXPECTED] the report window of R1 closed at 1791814636; anybody may certify it now
+      [14:18:56] S certify(R1)  0x9355cc1d893e8639a8cb83857d9a8f631bdd9b68a720e167758e0e37fbf691b3  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  S, who published nothing, certifies R1: leaky  - 3 agree, 0 disagree, 2 idle  {"ok": true, "release": "R1", "status": "leaky", "leaks": 1, "judged": 3, "returned": "1000000000000000000", "to": "0x46
+PASS  and the 1 GEN left of R1's bond goes back to the publisher in the same call  - {"p":"1000000000000000000","s":"0"}
+      [14:19:38] S certify(R2)  0x73f1328651ad6edd844ee66f21cf0fae4d63a6b2bc59fece19b2b32aca6c51bc  5 agree, 0 disagree, 0 idle  SUCCESS
+PASS  S certifies R2: clean, no leak proven, and its whole 1 GEN bond goes back to the publisher  - 5 agree, 0 disagree, 0 idle  {"ok": true, "release": "R2", "status": "clean", "leaks": 0, "judged": 0, "returned": "1000000000000000000", "to": "0x46
+
+[14:19:38] ---- 6: the reading room acts on the certificate
+      [14:20:15] S buy(R2) +2 GEN  0xfbf906646e733442f2c654d8e989ed173dfc252de38aafd96df69ae053f1a8c2  4 agree, 0 disagree, 1 idle  SUCCESS
+PASS  S buys R2: Redact says clean, at the room's floor, so the sale goes through  - 4 agree, 0 disagree, 1 idle  {"ok": true, "release": "R2", "price": "2000000000000000000", "paid_to": "0x46fae702b14d2af2c400887ce97cfc4300078af1", "
+PASS  and the 2 GEN reach the publisher in the same call  - {"s":"-2000000000000000000","p":"2000000000000000000"}
+      [14:20:56] S buy(R1) +2 GEN  0xacd831499bd5545535a519c594879dc34a851b4434bd4fbdecb2b98274045c93  3 agree, 0 disagree, 2 idle  SUCCESS
+PASS  S tries to buy R1: refused, because R1 is leaky on Redact, and the 2 GEN come back  - 3 agree, 0 disagree, 2 idle  R1 is leaky on Redact, not clean: a leak of a private person's details was proven in it on Redact; it is never sold here
+
+[14:20:57] ---- 7: the views, the code, and the money
+PASS  release(R1) is leaky, release(R2) is clean and release(R3) is withdrawn, all with nothing left held  - {"R1":"leaky","R2":"clean","R3":"withdrawn"}
+PASS  reports_of(R1, 0, 20): the wrong category, the leak and the official, all judged, total 3  - {"release":"R1","total":3,"offset":0,"limit":20,"ids":["F1","F2","F3"]}
+PASS  report_record(S's): clean, sentence 4, money, the report bond to the publisher  - {"verdict":"clean","category":"money"}
+PASS  report_record(F's): leak, sentence 4, home, the bounty paid  - {"verdict":"leak","bounty_paid":"1000000000000000000"}
+PASS  report_record(G's): clean, sentence 1, identity, the report bond to the publisher  - {"verdict":"clean","to_publisher":"100000000000000000"}
+PASS  the room: R2 sold once for 2 GEN, S holds R2, nobody holds R1, and R3 was never listed  - {"listing":{"release":"R2","seller":"0x46fae702b14d2af2c400887ce97cfc4300078af1","price":"2000000000000000000","sales":1,"earned":"2000000000000000000"},"holds":true,"holds1":false,"r3":"R3 is not offered here"}
+PASS  credit(F), credit(G) and credit(S) are all zero: nothing is left held for anybody  - ["0","0","0"]
+PASS  stats(): three releases, one clean, one leaky, one withdrawn, one leak, two clean readings, nothing held  - {"releases":3,"unsettled":0,"certified_clean":1,"certified_leaky":1,"withdrawn":1,"reports":3,"leaks":1,"clean":2,"unclear":0,"refused":1,"bonds_held":"0","credits_held":"0","bounties_paid":"1000000000000000000","fined_total":"200000000000000000","balance_owed":"0"}
+PASS  rules(): the four askings, the agreement rule, one report per category, and the bounded settlement  - value,askings,combine,categories,compared,not_asked,money,settlement,who,limits,untrusted
+PASS  both contracts' own balances are zero  - 0 / 0
+PASS  the code deployed at 0x38792FcC2Db139Ea4a7895e3F60a5Defc6CE5bEa is byte for byte contracts/redact.py  - 51636 bytes, sha256 4920a1cc7257800ca59cfbb81eb412951fa1c20501ae73ceb55afaf90fade649
+PASS  the code deployed at 0x0924343c854B9FCbca0aF3DB064667722b30BeB3 is byte for byte fixtures/reading_room.py  - 15097 bytes, sha256 fc387c91cb0be1a371efb9abe349a7c4db460f079cdddfb7362e0ec0c17219cc
+PASS  over the run every account ends exactly where the receipts say  - P 1.2 (receipts 1.2)  F 1 (receipts 1)  G -0.1 (receipts -0.1)  S -2.1 (receipts -2.1)
+
+44 passed, 0 failed
+Redact: 0x38792FcC2Db139Ea4a7895e3F60a5Defc6CE5bEa  ReadingRoom: 0x0924343c854B9FCbca0aF3DB064667722b30BeB3
+transactions: 28 in 28 steps; sent a second time: none
+wrongCategoryR1  0x05641489492b1cb2e5044abef50fb51c4f7669be93a7a634ede6f38677c9646b 3 agree, 0 disagree, 2 idle  clean F1
+leakR1           0x2759d477858cbc091753f46dc64c9f2e4587a5dba25f2b708672316e4574261b 3 agree, 0 disagree, 2 idle  leak F2
+officialR1       0x4d7de44fd8a2c360f1f583567cd9f1f336e085ba77e72e8e425c3cd57764a067 3 agree, 0 disagree, 2 idle  clean F3
+
